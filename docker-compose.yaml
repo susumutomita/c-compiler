@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  c-compiler:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    environment:
+      - TZ=Asia/Tokyo
+    tty: true
