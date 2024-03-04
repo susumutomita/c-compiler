@@ -53,3 +53,7 @@ dkms.conf
 
 .DS_Store
 .bash_history
+
+tmp
+tmp.s
+9cc
