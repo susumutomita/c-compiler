@@ -11,7 +11,6 @@ int main(int argc, char **argv)
 
   char *p = argv[1];
 
-  printf(".intel_syntax noprefix\n");
   printf(".globl main\n");
   printf("main:\n");
   printf("  mov rax, %ld\n", strtol(p, &p, 10));
