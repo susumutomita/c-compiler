@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 
   printf(".globl main\n");
   printf("main:\n");
-  printf("  mov rax, %ld\n", strtol(p, &p, 10));
+  printf("  mov x0, %ld\n", strtol(p, &p, 10));
 
   while (*p)
   {
