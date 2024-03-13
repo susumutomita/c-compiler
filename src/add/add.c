@@ -20,14 +20,14 @@ int main(int argc, char **argv)
     if (*p == '+')
     {
       p++;
-      printf("  add rax, %ld\n", strtol(p, &p, 10));
+      printf("  add x0, %ld\n", strtol(p, &p, 10));
       continue;
     }
 
     if (*p == '-')
     {
       p++;
-      printf("  sub rax, %ld\n", strtol(p, &p, 10));
+      printf("  sub x0, %ld\n", strtol(p, &p, 10));
       continue;
     }
 
