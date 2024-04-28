@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+//
+// Tokenizer
+//
+
 typedef enum
 {
   TK_RESERVED, // Keywords or punctuators
@@ -12,26 +16,6 @@ typedef enum
   TK_EOF,      // End-of-file markers
 } TokenKind;
 
-// 抽象構文木のノードの種類
-typedef enum
-{
-  ND_ADD, // +
-  ND_SUB, // -
-  ND_MUL, // *
-  ND_DIV, // /
-  ND_NUM, // 整数
-} NodeKind;
-
-typedef struct Node Node;
-
-// 抽象構文木のノードの型
-struct Node
-{
-  NodeKind kind; // ノードの型
-  Node *lhs;     // 左辺
-  Node *rhs;     // 右辺
-  int val;       // kindがND_NUMの場合のみ使う
-};
 // Token type
 typedef struct Token Token;
 struct Token
@@ -41,20 +25,6 @@ struct Token
   int val;        // If kind is TK_NUM, its value
   char *str;      // Token string
 };
-
-void error(char *fmt, ...);
-void error_at(char *loc, char *fmt, ...);
-bool consume(char op);
-void expect(char op);
-int expect_number();
-Node *new_node(NodeKind kind, Node *lhs, Node *rhs);
-Node *new_node_num(int val);
-Node *expr();
-Node *mul();
-Node *primary();
-Token *new_token(TokenKind kind, Token *cur, char *str);
-Token *tokenize();
-void gen(Node *node);
 
 // Input program
 char *user_input;
@@ -119,67 +89,6 @@ bool at_eof()
   return token->kind == TK_EOF;
 }
 
-Node *new_node(NodeKind kind, Node *lhs, Node *rhs)
-{
-  Node *node = calloc(1, sizeof(Node));
-  node->kind = kind;
-  node->lhs = lhs;
-  node->rhs = rhs;
-  return node;
-}
-
-Node *new_node_num(int val)
-{
-  Node *node = calloc(1, sizeof(Node));
-  node->kind = ND_NUM;
-  node->val = val;
-  return node;
-}
-
-Node *expr()
-{
-  Node *node = mul();
-
-  for (;;)
-  {
-    if (consume('+'))
-      node = new_node(ND_ADD, node, mul());
-    else if (consume('-'))
-      node = new_node(ND_SUB, node, mul());
-    else
-      return node;
-  }
-}
-
-Node *mul()
-{
-  Node *node = primary();
-
-  for (;;)
-  {
-    if (consume('*'))
-      node = new_node(ND_MUL, node, primary());
-    else if (consume('/'))
-      node = new_node(ND_DIV, node, primary());
-    else
-      return node;
-  }
-}
-
-Node *primary()
-{
-  // 次のトークンが"("なら、"(" expr ")"のはず
-  if (consume('('))
-  {
-    Node *node = expr();
-    expect(')');
-    return node;
-  }
-
-  // そうでなければ数値のはず
-  return new_node_num(expect_number());
-}
-
 // Create a new token and add it as the next token of `cur`.
 Token *new_token(TokenKind kind, Token *cur, char *str)
 {
@@ -208,7 +117,7 @@ Token *tokenize()
     }
 
     // Punctuator
-    if (*p == '+' || *p == '-')
+    if (strchr("+-*/()", *p))
     {
       cur = new_token(TK_RESERVED, cur, p++);
       continue;
@@ -222,12 +131,110 @@ Token *tokenize()
       continue;
     }
 
-    error_at(p, "expected a number");
+    error_at(p, "invalid token");
   }
 
   new_token(TK_EOF, cur, p);
   return head.next;
 }
+
+//
+// Parser
+//
+
+typedef enum
+{
+  ND_ADD, // +
+  ND_SUB, // -
+  ND_MUL, // *
+  ND_DIV, // /
+  ND_NUM, // Integer
+} NodeKind;
+
+// AST node type
+typedef struct Node Node;
+struct Node
+{
+  NodeKind kind; // Node kind
+  Node *lhs;     // Left-hand side
+  Node *rhs;     // Right-hand side
+  int val;       // Used if kind == ND_NUM
+};
+
+Node *new_node(NodeKind kind)
+{
+  Node *node = calloc(1, sizeof(Node));
+  node->kind = kind;
+  return node;
+}
+
+Node *new_binary(NodeKind kind, Node *lhs, Node *rhs)
+{
+  Node *node = new_node(kind);
+  node->lhs = lhs;
+  node->rhs = rhs;
+  return node;
+}
+
+Node *new_num(int val)
+{
+  Node *node = new_node(ND_NUM);
+  node->val = val;
+  return node;
+}
+
+Node *expr();
+Node *mul();
+Node *primary();
+
+// expr = mul ("+" mul | "-" mul)*
+Node *expr()
+{
+  Node *node = mul();
+
+  for (;;)
+  {
+    if (consume('+'))
+      node = new_binary(ND_ADD, node, mul());
+    else if (consume('-'))
+      node = new_binary(ND_SUB, node, mul());
+    else
+      return node;
+  }
+}
+
+// mul = primary ("*" primary | "/" primary)*
+Node *mul()
+{
+  Node *node = primary();
+
+  for (;;)
+  {
+    if (consume('*'))
+      node = new_binary(ND_MUL, node, primary());
+    else if (consume('/'))
+      node = new_binary(ND_DIV, node, primary());
+    else
+      return node;
+  }
+}
+
+// primary = "(" expr ")" | num
+Node *primary()
+{
+  if (consume('('))
+  {
+    Node *node = expr();
+    expect(')');
+    return node;
+  }
+
+  return new_num(expect_number());
+}
+
+//
+// Code generator
+//
 
 void gen(Node *node)
 {
@@ -259,40 +266,31 @@ void gen(Node *node)
     printf("  idiv rdi\n");
     break;
   }
+
   printf("  push rax\n");
 }
 
 int main(int argc, char **argv)
 {
   if (argc != 2)
-  {
     error("%s: invalid number of arguments", argv[0]);
-    return 1;
-  }
 
+  // Tokenize and parse.
   user_input = argv[1];
   token = tokenize();
+  Node *node = expr();
 
+  // Print out the first half of assembly.
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");
   printf("main:\n");
 
-  // The first token must be a number
-  printf("  mov rax, %d\n", expect_number());
+  // Traverse the AST to emit assembly.
+  gen(node);
 
-  // ... followed by either `+ <number>` or `- <number>`.
-  while (!at_eof())
-  {
-    if (consume('+'))
-    {
-      printf("  add rax, %d\n", expect_number());
-      continue;
-    }
-
-    expect('-');
-    printf("  sub rax, %d\n", expect_number());
-  }
-
+  // A result must be at the top of the stack, so pop it
+  // to RAX to make it a program exit code.
+  printf("  pop rax\n");
   printf("  ret\n");
   return 0;
 }
