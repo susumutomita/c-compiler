@@ -42,6 +42,20 @@ struct Token
   char *str;      // Token string
 };
 
+void error(char *fmt, ...);
+void error_at(char *loc, char *fmt, ...);
+bool consume(char op);
+void expect(char op);
+int expect_number();
+Node *new_node(NodeKind kind, Node *lhs, Node *rhs);
+Node *new_node_num(int val);
+Node *expr();
+Node *mul();
+Node *primary();
+Token *new_token(TokenKind kind, Token *cur, char *str);
+Token *tokenize();
+void gen(Node *node);
+
 // Input program
 char *user_input;
 
@@ -122,49 +136,49 @@ Node *new_node_num(int val)
   return node;
 }
 
-// Node *mul()
-// {
-//   Node *node = primary();
+Node *expr()
+{
+  Node *node = mul();
 
-//   for (;;)
-//   {
-//     if (consume('*'))
-//       node = new_node(ND_MUL, node, primary());
-//     else if (consume('/'))
-//       node = new_node(ND_DIV, node, primary());
-//     else
-//       return node;
-//   }
-// }
+  for (;;)
+  {
+    if (consume('+'))
+      node = new_node(ND_ADD, node, mul());
+    else if (consume('-'))
+      node = new_node(ND_SUB, node, mul());
+    else
+      return node;
+  }
+}
 
-// Node *expr()
-// {
-//   Node *node = mul();
+Node *mul()
+{
+  Node *node = primary();
 
-//   for (;;)
-//   {
-//     if (consume('+'))
-//       node = new_node(ND_ADD, node, mul());
-//     else if (consume('-'))
-//       node = new_node(ND_SUB, node, mul());
-//     else
-//       return node;
-//   }
-// }
+  for (;;)
+  {
+    if (consume('*'))
+      node = new_node(ND_MUL, node, primary());
+    else if (consume('/'))
+      node = new_node(ND_DIV, node, primary());
+    else
+      return node;
+  }
+}
 
-// Node *primary()
-// {
-//   // 次のトークンが"("なら、"(" expr ")"のはず
-//   if (consume('('))
-//   {
-//     Node *node = expr();
-//     expect(')');
-//     return node;
-//   }
+Node *primary()
+{
+  // 次のトークンが"("なら、"(" expr ")"のはず
+  if (consume('('))
+  {
+    Node *node = expr();
+    expect(')');
+    return node;
+  }
 
-//   // そうでなければ数値のはず
-//   return new_node_num(expect_number());
-// }
+  // そうでなければ数値のはず
+  return new_node_num(expect_number());
+}
 
 // Create a new token and add it as the next token of `cur`.
 Token *new_token(TokenKind kind, Token *cur, char *str)
@@ -244,8 +258,9 @@ void gen(Node *node)
     printf("  cqo\n");
     printf("  idiv rdi\n");
     break;
+  case ND_NUM: // Add this case
+    break;
   }
-
   printf("  push rax\n");
 }
 
