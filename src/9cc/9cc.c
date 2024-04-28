@@ -258,8 +258,6 @@ void gen(Node *node)
     printf("  cqo\n");
     printf("  idiv rdi\n");
     break;
-  case ND_NUM: // Add this case
-    break;
   }
   printf("  push rax\n");
 }
