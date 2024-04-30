@@ -8,6 +8,28 @@ Node *mul();
 Node *unary();
 Node *primary();
 
+// expr = equality
+Node *expr()
+{
+  return equality();
+}
+
+// equality = relational ("==" relational | "!=" relational)*
+Node *equality()
+{
+  Node *node = relational();
+
+  for (;;)
+  {
+    if (consume("=="))
+      node = new_binary(ND_EQ, node, relational());
+    else if (consume("!="))
+      node = new_binary(ND_NE, node, relational());
+    else
+      return node;
+  }
+}
+
 // relational = add ("<" add | "<=" add | ">" add | ">=" add)*
 Node *relational()
 {
@@ -82,26 +104,4 @@ Node *primary()
   }
 
   return new_num(expect_number());
-}
-
-// expr = equality
-Node *expr()
-{
-  return equality();
-}
-
-// equality = relational ("==" relational | "!=" relational)*
-Node *equality()
-{
-  Node *node = relational();
-
-  for (;;)
-  {
-    if (consume("=="))
-      node = new_binary(ND_EQ, node, relational());
-    else if (consume("!="))
-      node = new_binary(ND_NE, node, relational());
-    else
-      return node;
-  }
 }
