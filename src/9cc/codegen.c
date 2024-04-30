@@ -1,7 +1,4 @@
 #include "9cc.h"
-//
-// Code generator
-//
 
 void gen(Node *node)
 {
