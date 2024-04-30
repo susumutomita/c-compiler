@@ -30,4 +30,4 @@ assert 0 "-3==5"
 assert 1 "1==1"
 assert 0 "1!=1"
 assert 1 "-3!=5"
-echo OK
+echo OKあああああ９
