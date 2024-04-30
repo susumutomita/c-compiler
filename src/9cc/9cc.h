@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct Node Node;   // 事前に Node 型を宣言
-typedef struct Token Token; // 事前に Token 型を宣言
 // Token and node kinds
 typedef enum
 {
@@ -29,6 +27,7 @@ typedef enum
 } NodeKind;
 
 // AST node structure
+typedef struct Node Node;
 typedef struct Node
 {
   NodeKind kind; // Node kind
@@ -38,6 +37,7 @@ typedef struct Node
 } Node;
 
 // Token structure
+typedef struct Token Token; // 事前に Token 型を宣言
 typedef struct Token
 {
   TokenKind kind; // Token kind
@@ -49,9 +49,6 @@ typedef struct Token
 
 // Function declarations
 Token *tokenize();
-Node *parse(Token **cur);
-void generate_code(Node *node);
-void error_at(char *loc, char *fmt, ...);
 void error(char *fmt, ...);
 Node *expr(); // この関数が実際に必要な場合
 void gen(Node *node);
