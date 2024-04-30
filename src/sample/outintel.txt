@@ -1,0 +1,50 @@
+
+foo.o:     file format elf64-x86-64
+
+
+Disassembly of section .data:
+
+0000000000000000 <main>:
+   0:	f0 0f                	lock cmpxchg8b (bad)
+   2:	c7                   	(bad)  
+   3:	c8                   	.byte 0xc8
+	...
+
+Disassembly of section .comment:
+
+0000000000000000 <.comment>:
+   0:	00 47 43             	add    BYTE PTR [rdi+0x43],al
+   3:	43 3a 20             	rex.XB cmp spl,BYTE PTR [r8]
+   6:	28 55 62             	sub    BYTE PTR [rbp+0x62],dl
+   9:	75 6e                	jne    79 <main+0x79>
+   b:	74 75                	je     82 <main+0x82>
+   d:	20 39                	and    BYTE PTR [rcx],bh
+   f:	2e 34 2e             	cs xor al,0x2e
+  12:	30 2d 31 75 62 75    	xor    BYTE PTR [rip+0x75627531],ch        # 75627549 <main+0x75627549>
+  18:	6e                   	outs   dx,BYTE PTR ds:[rsi]
+  19:	74 75                	je     90 <main+0x90>
+  1b:	31 7e 32             	xor    DWORD PTR [rsi+0x32],edi
+  1e:	30 2e                	xor    BYTE PTR [rsi],ch
+  20:	30 34 2e             	xor    BYTE PTR [rsi+rbp*1],dh
+  23:	32 29                	xor    ch,BYTE PTR [rcx]
+  25:	20 39                	and    BYTE PTR [rcx],bh
+  27:	2e 34 2e             	cs xor al,0x2e
+  2a:	30 00                	xor    BYTE PTR [rax],al
+
+Disassembly of section .note.gnu.property:
+
+0000000000000000 <.note.gnu.property>:
+   0:	04 00                	add    al,0x0
+   2:	00 00                	add    BYTE PTR [rax],al
+   4:	10 00                	adc    BYTE PTR [rax],al
+   6:	00 00                	add    BYTE PTR [rax],al
+   8:	05 00 00 00 47       	add    eax,0x47000000
+   d:	4e 55                	rex.WRX push rbp
+   f:	00 02                	add    BYTE PTR [rdx],al
+  11:	00 00                	add    BYTE PTR [rax],al
+  13:	c0 04 00 00          	rol    BYTE PTR [rax+rax*1],0x0
+  17:	00 03                	add    BYTE PTR [rbx],al
+  19:	00 00                	add    BYTE PTR [rax],al
+  1b:	00 00                	add    BYTE PTR [rax],al
+  1d:	00 00                	add    BYTE PTR [rax],al
+	...
