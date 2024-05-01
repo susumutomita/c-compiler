@@ -53,6 +53,12 @@ Token *tokenize();
 void error(char *fmt, ...);
 Node *expr(); // この関数が実際に必要な場合
 void gen(Node *node);
+bool consume(char *op);
+Node *new_binary(NodeKind kind, Node *lhs, Node *rhs);
+Node *new_num(int val);
+void expect(char *op);
+
+int expect_number();
 
 // External variables
 char *user_input;
