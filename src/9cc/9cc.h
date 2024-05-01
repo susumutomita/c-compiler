@@ -8,9 +8,10 @@
 // Token and node kinds
 typedef enum
 {
-  TK_RESERVED, // Keywords or punctuators
-  TK_NUM,      // Integer literals
-  TK_EOF,      // End-of-file markers
+  TK_RESERVED, // 記号
+  TK_IDENT,    // 識別子
+  TK_NUM,      // 整数トークン
+  TK_EOF,      // 入力の終わりを表すトークン
 } TokenKind;
 
 typedef enum

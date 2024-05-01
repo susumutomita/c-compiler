@@ -112,6 +112,13 @@ Token *tokenize()
       continue;
     }
 
+    if ('a' <= *p && *p <= 'z')
+    {
+      cur = new_token(TK_IDENT, cur, p++, 1);
+      cur->len = 1;
+      continue;
+    }
+
     error_at(p, "invalid token");
   }
 
