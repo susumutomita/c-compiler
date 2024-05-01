@@ -16,15 +16,17 @@ typedef enum
 
 typedef enum
 {
-  ND_ADD, // +
-  ND_SUB, // -
-  ND_MUL, // *
-  ND_DIV, // /
-  ND_EQ,  // ==
-  ND_NE,  // !=
-  ND_LT,  // <
-  ND_LE,  // <=
-  ND_NUM, // Integer
+  ND_ASSIGN,
+  ND_ADD,  // +
+  ND_SUB,  // -
+  ND_MUL,  // *
+  ND_DIV,  // /
+  ND_EQ,   // ==
+  ND_NE,   // !=
+  ND_LT,   // <
+  ND_LE,   // <=
+  ND_NUM,  // Integer
+  ND_LVAR, // ローカル変数
 } NodeKind;
 
 // AST node structure
@@ -35,6 +37,7 @@ typedef struct Node
   Node *lhs;     // Left-hand side
   Node *rhs;     // Right-hand side
   int val;       // Used if kind is ND_NUM
+  int offset;    // kindがND_LVARの場合のみ使う
 } Node;
 
 // Token structure
@@ -54,12 +57,16 @@ void error(char *fmt, ...);
 Node *expr(); // この関数が実際に必要な場合
 void gen(Node *node);
 bool consume(char *op);
+Token *consume_ident();
 Node *new_binary(NodeKind kind, Node *lhs, Node *rhs);
+Node *new_node(NodeKind kind);
 Node *new_num(int val);
 void expect(char *op);
-
+void program();
 int expect_number();
+bool at_eof();
 
 // External variables
 char *user_input;
 Token *token;
+Node *code[100];

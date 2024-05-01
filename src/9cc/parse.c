@@ -1,5 +1,7 @@
 #include "9cc.h"
 
+Node *assign();
+Node *stmt();
 Node *expr();
 Node *equality();
 Node *relational();
@@ -8,10 +10,35 @@ Node *mul();
 Node *unary();
 Node *primary();
 
+Node *code[100];
+
+Node *assign()
+{
+  Node *node = equality();
+  if (consume("="))
+    node = new_binary(ND_ASSIGN, node, assign()); // `new_node` から `new_binary` に変更
+  return node;
+}
+
 // expr = equality
 Node *expr()
 {
-  return equality();
+  return assign();
+}
+
+Node *stmt()
+{
+  Node *node = expr();
+  expect(";");
+  return node;
+}
+
+void program()
+{
+  int i = 0;
+  while (!at_eof())
+    code[i++] = stmt();
+  code[i] = NULL;
 }
 
 // equality = relational ("==" relational | "!=" relational)*
@@ -96,6 +123,14 @@ Node *unary()
 // primary = "(" expr ")" | num
 Node *primary()
 {
+  Token *tok = consume_ident();
+  if (tok)
+  {
+    Node *node = calloc(1, sizeof(Node));
+    node->kind = ND_LVAR;
+    node->offset = (tok->str[0] - 'a' + 1) * 8;
+    return node;
+  }
   if (consume("("))
   {
     Node *node = expr();

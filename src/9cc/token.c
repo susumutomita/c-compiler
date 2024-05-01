@@ -34,6 +34,7 @@ Node *new_node(NodeKind kind)
 Node *new_binary(NodeKind kind, Node *lhs, Node *rhs)
 {
   Node *node = new_node(kind);
+  node->kind = kind;
   node->lhs = lhs;
   node->rhs = rhs;
   return node;
@@ -150,4 +151,15 @@ bool consume(char *op)
     return false;
   token = token->next;
   return true;
+}
+
+Token *consume_ident()
+{
+  if (token->kind == TK_IDENT)
+  {
+    Token *t = token;
+    token = token->next; // 次のトークンへ進む
+    return t;
+  }
+  return NULL;
 }
