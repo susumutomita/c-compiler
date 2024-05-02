@@ -151,3 +151,11 @@ bool consume(char *op)
   token = token->next;
   return true;
 }
+
+bool consume_ident()
+{
+  if (token->kind != TK_IDENT)
+    return false;
+  token = token->next;
+  return true;
+}
