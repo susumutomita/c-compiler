@@ -29,4 +29,18 @@ assert 0 "-3==5"
 assert 1 "1==1"
 assert 0 "1!=1"
 assert 1 "-3!=5"
+# assert 1 "a = 1;"  # 単純な変数代入と参照
+# assert 14 "a = 3; b = 5; a * b - 1"  # 複数の変数を使った計算
+# assert 1 "a = 3; b = 3; a == b"  # 等価演算子
+# assert 0 "a = 5; b = 3; a == b"  # 等価演算子（不一致）
+# assert 1 "a = 5; b = 3; a != b"  # 不等演算子
+# assert 1 "a = 2; b = 3; a < b"   # 小なり演算子
+# assert 0 "a = 5; a < 5"          # 小なり演算子（境界値）
+# assert 1 "a = 5; a <= 5"         # 小なり等価演算子（境界値）
+# assert 1 "a = 5; b = 5; a >= b"  # 大なり等価演算子
+# assert 0 "a = 3; b = 5; a >= b"  # 大なり等価演算子（不一致）
+# assert 0 "a = 3; b = 5; a > b"   # 大なり演算子
+# assert 1 "a = 6; b = 5; a > b"   # 大なり演算子（一致）
+# assert 15 "a = 5; b = 3; a * b"  # 乗算テスト
+# assert 2 "a = 6; b = 3; a / b"   # 除算テスト
 echo OK

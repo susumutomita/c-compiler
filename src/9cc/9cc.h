@@ -63,7 +63,9 @@ Node *new_num(int val);
 void expect(char *op);
 bool at_eof();
 int expect_number();
+void program();
 
 // External variables
 char *user_input;
 Token *token;
+extern Node *code[100];
