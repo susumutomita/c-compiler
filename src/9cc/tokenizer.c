@@ -152,10 +152,14 @@ bool consume(char *op)
   return true;
 }
 
-bool consume_ident()
+Token *consume_ident()
 {
-  if (token->kind != TK_IDENT)
-    return false;
-  token = token->next;
-  return true;
+  // 現在のトークンが識別子であるか確認する
+  if (token->kind == TK_IDENT)
+  {
+    Token *t = token;
+    token = token->next; // トークンを進める
+    return t;            // 識別子トークンを返す
+  }
+  return NULL; // 識別子でなければNULLを返す
 }

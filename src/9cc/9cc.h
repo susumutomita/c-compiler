@@ -57,10 +57,11 @@ void error(char *fmt, ...);
 Node *expr(); // この関数が実際に必要な場合
 void gen(Node *node);
 bool consume(char *op);
+Token *consume_ident();
 Node *new_binary(NodeKind kind, Node *lhs, Node *rhs);
 Node *new_num(int val);
 void expect(char *op);
-
+bool at_eof();
 int expect_number();
 
 // External variables
