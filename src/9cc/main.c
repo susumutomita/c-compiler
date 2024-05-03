@@ -21,9 +21,9 @@ int main(int argc, char **argv)
 
   // プロローグ
   // 変数26個分の領域を確保する
-  // printf("  push rbp\n");
-  // printf("  mov rbp, rsp\n");
-  // printf("  sub rsp, 208\n");
+  printf("  push rbp\n");
+  printf("  mov rbp, rsp\n");
+  printf("  sub rsp, 208\n");
 
   // 先頭の式から順にコード生成
   for (int i = 0; code[i]; i++)
@@ -35,14 +35,13 @@ int main(int argc, char **argv)
     printf("  pop rax\n");
   }
 
-
   // Traverse the AST to emit assembly.
-  gen(node);
-
+  // gen(node);
 
   // A result must be at the top of the stack, so pop it
   // to RAX to make it a program exit code.
-  printf("  pop rax\n");
+  printf("  mov rsp, rbp\n");
+  printf("  pop rbp\n");
   printf("  ret\n");
   return 0;
 }
