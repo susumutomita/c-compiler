@@ -1,13 +1,12 @@
+.intel_syntax noprefix
 .globl main
 main:
-// 左辺と右辺をプッシュ
-push 1
-push 2
+    push rbp            # 呼び出し元のベースポインタを保存
+    mov rbp, rsp        # 現在のスタックポインタをベースポインタに設定
 
-// 左辺と右辺をRAXとRDIにポップして足す
-pop rdi
-pop rax
-add rax, rdi
+    # ここで関数の本体を実行
+    mov rax, 1          # raxに1をセット（通常、関数の戻り値をraxにセット）
 
-// 足した結果をスタックにプッシュ
-push rax
+    mov rsp, rbp        # スタックポインタを元に戻す
+    pop rbp             # ベースポインタを復元
+    ret                 # 呼び出し元にリターン
