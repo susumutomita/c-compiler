@@ -25,6 +25,26 @@ int main(int argc, char **argv)
   printf("  mov rbp, rsp\n");
   printf("  sub rsp, 208\n");
 
+  for (int i = 0; code[i]; i++)
+  {
+    printf("code[%d]:\n", i);
+    printf("  kind: %d\n", code[i]->kind);
+    if (code[i]->lhs)
+    {
+      printf("  lhs: %p\n", (void *)code[i]->lhs);
+    }
+    if (code[i]->rhs)
+    {
+      printf("  rhs: %p\n", (void *)code[i]->rhs);
+    }
+    if (code[i]->kind == ND_NUM)
+    {
+      printf("  val: %d\n", code[i]->val);
+    }
+    // ここでgen関数を呼び出す前にデバッグ情報を出力
+    gen(code[i]);
+    printf("  pop rax\n");
+  }
   // 先頭の式から順にコード生成
   for (int i = 0; code[i]; i++)
   {
