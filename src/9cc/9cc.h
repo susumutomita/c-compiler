@@ -54,7 +54,7 @@ typedef struct Token
 // Function declarations
 Token *tokenize();
 void error(char *fmt, ...);
-Node *expr(); // この関数が実際に必要な場合
+Node *expr();
 void gen(Node *node);
 bool consume(char *op);
 Token *consume_ident();
