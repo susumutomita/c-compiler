@@ -25,35 +25,35 @@ int main(int argc, char **argv)
   printf("  mov rbp, rsp\n");
   printf("  sub rsp, 208\n");
 
+  // デバッグ情報の出力
   for (int i = 0; code[i]; i++)
   {
-    printf("code[%d]:\n", i);
-    printf("  kind: %d\n", code[i]->kind);
+    fprintf(stderr, "code[%d]:\n", i);
+    fprintf(stderr, "  kind: %d\n", code[i]->kind);
     if (code[i]->lhs)
     {
-      printf("  lhs: %p\n", (void *)code[i]->lhs);
+      fprintf(stderr, "  lhs: %p\n", (void *)code[i]->lhs);
     }
     if (code[i]->rhs)
     {
-      printf("  rhs: %p\n", (void *)code[i]->rhs);
+      fprintf(stderr, "  rhs: %p\n", (void *)code[i]->rhs);
     }
     if (code[i]->kind == ND_NUM)
     {
-      printf("  val: %d\n", code[i]->val);
+      fprintf(stderr, "  val: %d\n", code[i]->val);
     }
-    // ここでgen関数を呼び出す前にデバッグ情報を出力
     gen(code[i]);
     printf("  pop rax\n");
   }
-  // 先頭の式から順にコード生成
-  for (int i = 0; code[i]; i++)
-  {
-    gen(code[i]);
+  // // 先頭の式から順にコード生成
+  // for (int i = 0; code[i]; i++)
+  // {
+  //   gen(code[i]);
 
-    // 式の評価結果としてスタックに一つの値が残っている
-    // はずなので、スタックが溢れないようにポップしておく
-    printf("  pop rax\n");
-  }
+  //   // 式の評価結果としてスタックに一つの値が残っている
+  //   // はずなので、スタックが溢れないようにポップしておく
+  //   printf("  pop rax\n");
+  // }
 
   // Traverse the AST to emit assembly.
   // gen(node);
