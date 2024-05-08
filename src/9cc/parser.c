@@ -29,17 +29,12 @@ Node *stmt()
   return node;
 }
 
-// void program()
-// {
-//   int i = 0;
-//   while (!at_eof())
-//     code[i++] = stmt();
-//   code[i] = NULL;
-// }
-
 void program()
 {
-  code[0] = stmt();
+  int i = 0;
+  while (!at_eof())
+    code[i++] = stmt();
+  code[i] = NULL;
 }
 
 // equality = relational ("==" relational | "!=" relational)*
