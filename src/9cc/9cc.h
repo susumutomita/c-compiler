@@ -68,4 +68,4 @@ void program();
 // External variables
 char *user_input;
 Token *token;
-extern Node *code[100];
+Node *code[100];

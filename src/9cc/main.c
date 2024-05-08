@@ -26,25 +26,25 @@ int main(int argc, char **argv)
   printf("  sub rsp, 208\n");
 
   // デバッグ情報の出力
-  for (int i = 0; code[i]; i++)
-  {
-    fprintf(stderr, "code[%d]:\n", i);
-    fprintf(stderr, "  kind: %d\n", code[i]->kind);
-    if (code[i]->lhs)
-    {
-      fprintf(stderr, "  lhs: %p\n", (void *)code[i]->lhs);
-    }
-    if (code[i]->rhs)
-    {
-      fprintf(stderr, "  rhs: %p\n", (void *)code[i]->rhs);
-    }
-    if (code[i]->kind == ND_NUM)
-    {
-      fprintf(stderr, "  val: %d\n", code[i]->val);
-    }
-    gen(code[i]);
-    printf("  pop rax\n");
-  }
+  // for (int i = 0; code[i]; i++)
+  // {
+  //   fprintf(stderr, "code[%d]:\n", i);
+  //   fprintf(stderr, "  kind: %d\n", code[i]->kind);
+  //   if (code[i]->lhs)
+  //   {
+  //     fprintf(stderr, "  lhs: %p\n", (void *)code[i]->lhs);
+  //   }
+  //   if (code[i]->rhs)
+  //   {
+  //     fprintf(stderr, "  rhs: %p\n", (void *)code[i]->rhs);
+  //   }
+  //   if (code[i]->kind == ND_NUM)
+  //   {
+  //     fprintf(stderr, "  val: %d\n", code[i]->val);
+  //   }
+  //   gen(code[i]);
+  //   printf("  pop rax\n");
+  // }
   // // 先頭の式から順にコード生成
   // for (int i = 0; code[i]; i++)
   // {
@@ -56,7 +56,8 @@ int main(int argc, char **argv)
   // }
 
   // Traverse the AST to emit assembly.
-  // gen(node);
+  gen(node);
+  printf("  pop rax\n");
 
   // A result must be at the top of the stack, so pop it
   // to RAX to make it a program exit code.

@@ -1,6 +1,5 @@
 #include "9cc.h"
 
-Node *code[100];
 Node *expr();
 Node *equality();
 Node *relational();
