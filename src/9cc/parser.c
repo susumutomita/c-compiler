@@ -25,16 +25,21 @@ Node *expr()
 Node *stmt()
 {
   Node *node = expr();
-  expect(";");
+  // expect(";");
   return node;
 }
 
+// void program()
+// {
+//   int i = 0;
+//   while (!at_eof())
+//     code[i++] = stmt();
+//   code[i] = NULL;
+// }
+
 void program()
 {
-  int i = 0;
-  while (!at_eof())
-    code[i++] = stmt();
-  code[i] = NULL;
+  code[0] = stmt();
 }
 
 // equality = relational ("==" relational | "!=" relational)*
