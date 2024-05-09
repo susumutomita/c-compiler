@@ -25,7 +25,7 @@ Node *expr()
 Node *stmt()
 {
   Node *node = expr();
-  // expect(";");
+  expect(";");
   return node;
 }
 
